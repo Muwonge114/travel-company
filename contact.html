@@ -23,6 +23,9 @@
             color: white;
             padding: 1rem 0;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
 
         nav {
@@ -39,6 +42,35 @@
             font-weight: bold;
             text-decoration: none;
             color: white;
+            z-index: 1001;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 6px;
+            z-index: 1001;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: white;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(10px, 10px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
         }
 
         nav ul {
@@ -197,21 +229,129 @@
         }
 
         @media (max-width: 768px) {
+            nav {
+                padding: 0 15px;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
             nav ul {
+                position: absolute;
+                top: 60px;
+                left: 0;
+                right: 0;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                 flex-direction: column;
-                gap: 15px;
+                gap: 0;
+                display: none;
+                padding: 20px;
+                box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+            }
+
+            nav ul.active {
+                display: flex;
+            }
+
+            nav ul li {
+                padding: 10px 0;
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+            }
+
+            nav ul li:last-child {
+                border-bottom: none;
+            }
+
+            .logo {
+                font-size: 24px;
             }
 
             .page-header h1 {
                 font-size: 32px;
+                padding: 0 10px;
             }
 
             .contact-wrapper {
                 grid-template-columns: 1fr;
+                gap: 20px;
             }
 
             .container {
                 max-width: 100%;
+                padding: 10px;
+            }
+
+            .form-container {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            nav {
+                padding: 0 10px;
+            }
+
+            .logo {
+                font-size: 20px;
+            }
+
+            .page-header {
+                padding: 30px 10px;
+            }
+
+            .page-header h1 {
+                font-size: 24px;
+                margin-bottom: 5px;
+            }
+
+            .page-header p {
+                font-size: 14px;
+            }
+
+            .container {
+                padding: 8px;
+            }
+
+            .contact-info {
+                gap: 15px;
+            }
+
+            .info-card {
+                padding: 15px;
+            }
+
+            .info-card h3 {
+                font-size: 16px;
+            }
+
+            .info-card p {
+                font-size: 13px;
+            }
+
+            .form-container h2 {
+                font-size: 22px;
+            }
+
+            .form-group label {
+                font-size: 13px;
+            }
+
+            .form-group input,
+            .form-group textarea {
+                padding: 10px;
+                font-size: 12px;
+            }
+
+            .submit-btn {
+                padding: 10px 20px;
+                font-size: 14px;
+                width: 100%;
+            }
+
+            .message {
+                padding: 12px;
+                font-size: 13px;
             }
         }
     </style>
@@ -220,7 +360,12 @@
     <header>
         <nav>
             <a href="index.html" class="logo">✈️ TravelGo</a>
-            <ul>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <ul id="navMenu">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="packages.html">Travel Packages</a></li>
                 <li><a href="contact.html">Contact</a></li>
@@ -287,5 +432,23 @@
     <footer>
         <p>&copy; 2025 TravelGo. All rights reserved. | Email: info@travelgo.com | Phone: 1-800-TRAVEL</p>
     </footer>
+
+    <script>
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('navMenu');
+        const navLinks = navMenu.querySelectorAll('a');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+    </script>
 </body>
 </html>
