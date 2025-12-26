@@ -1,0 +1,475 @@
+<?php
+session_start();
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Packages - TravelGo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8f9fa;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            text-decoration: none;
+            color: white;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 30px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        nav a:hover {
+            opacity: 0.8;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-header h1 {
+            font-size: 42px;
+            margin-bottom: 10px;
+        }
+
+        .filters {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            background: white;
+            border: 2px solid #667eea;
+            color: #667eea;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .filter-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .filter-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .packages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .package-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .package-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .package-image {
+            height: 250px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+        }
+
+        .package-content {
+            padding: 25px;
+        }
+
+        .package-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .package-duration {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        .package-description {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .package-highlights {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .package-highlights li {
+            color: #666;
+            padding: 5px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .package-highlights li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .package-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .package-price {
+            font-size: 28px;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .package-price-label {
+            font-size: 12px;
+            color: #999;
+            display: block;
+        }
+
+        .book-btn {
+            background: #ff6b6b;
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.3s;
+            display: inline-block;
+        }
+
+        .book-btn:hover {
+            background: #ff5252;
+        }
+
+        .rating {
+            color: #ffc107;
+            margin-bottom: 10px;
+        }
+
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 50px;
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .page-header h1 {
+                font-size: 32px;
+            }
+
+            .filters {
+                flex-direction: column;
+            }
+
+            .packages-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.php" class="logo">✈️ TravelGo</a>
+            <ul>
+                <li><a href="index.php">Home</a></li>
+                <li><a href="packages.php">Travel Packages</a></li>
+                <li><a href="contact.php">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="page-header">
+        <h1>Our Travel Packages</h1>
+        <p>Choose from our curated selection of amazing destinations</p>
+    </section>
+
+    <div class="container">
+        <div class="filters">
+            <button class="filter-btn active">All Packages</button>
+            <button class="filter-btn">Beach</button>
+            <button class="filter-btn">Mountain</button>
+            <button class="filter-btn">Cultural</button>
+            <button class="filter-btn">Adventure</button>
+        </div>
+
+        <div class="packages-grid">
+            <!-- Package 1: Tropical Paradise -->
+            <div class="package-card">
+                <div class="package-image">🏖️</div>
+                <div class="package-content">
+                    <div class="rating">★★★★★ (4.8/5)</div>
+                    <h3 class="package-title">Tropical Paradise</h3>
+                    <p class="package-duration">7 Days / 6 Nights</p>
+                    <p class="package-description">Experience the ultimate beach getaway in the Caribbean with pristine beaches, crystal-clear waters, and luxury resorts.</p>
+                    <ul class="package-highlights">
+                        <li>All-inclusive resort stay</li>
+                        <li>Water sports activities</li>
+                        <li>Guided island tours</li>
+                        <li>Meals & beverages</li>
+                    </ul>
+                    <div class="package-footer">
+                        <div>
+                            <span class="package-price-label">Starting from</span>
+                            <span class="package-price">$899</span>
+                        </div>
+                        <a href="contact.php" class="book-btn">Book Now</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Package 2: Mountain Adventure -->
+            <div class="package-card">
+                <div class="package-image">🏔️</div>
+                <div class="package-content">
+                    <div class="rating">★★★★☆ (4.7/5)</div>
+                    <h3 class="package-title">Mountain Adventure</h3>
+                    <p class="package-duration">6 Days / 5 Nights</p>
+                    <p class="package-description">Trek through breathtaking alpine scenery, visit charming mountain villages, and experience outdoor adventures in the Swiss Alps.</p>
+                    <ul class="package-highlights">
+                        <li>Guided mountain hiking</li>
+                        <li>Alpine lodging</li>
+                        <li>Cable car rides</li>
+                        <li>Local cuisine tasting</li>
+                    </ul>
+                    <div class="package-footer">
+                        <div>
+                            <span class="package-price-label">Starting from</span>
+                            <span class="package-price">$799</span>
+                        </div>
+                        <a href="contact.php" class="book-btn">Book Now</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Package 3: Cultural Heritage -->
+            <div class="package-card">
+                <div class="package-image">🏛️</div>
+                <div class="package-content">
+                    <div class="rating">★★★★★ (4.9/5)</div>
+                    <h3 class="package-title">Cultural Heritage</h3>
+                    <p class="package-duration">8 Days / 7 Nights</p>
+                    <p class="package-description">Discover ancient civilizations, explore world-class museums, and immerse yourself in the rich history of Rome and Athens.</p>
+                    <ul class="package-highlights">
+                        <li>Expert guided tours</li>
+                        <li>Historic site access</li>
+                        <li>Museum visits</li>
+                        <li>Traditional dining</li>
+                    </ul>
+                    <div class="package-footer">
+                        <div>
+                            <span class="package-price-label">Starting from</span>
+                            <span class="package-price">$1,099</span>
+                        </div>
+                        <a href="contact.php" class="book-btn">Book Now</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Package 4: Safari Experience -->
+            <div class="package-card">
+                <div class="package-image">🦁</div>
+                <div class="package-content">
+                    <div class="rating">★★★★★ (4.9/5)</div>
+                    <h3 class="package-title">African Safari</h3>
+                    <p class="package-duration">9 Days / 8 Nights</p>
+                    <p class="package-description">Experience the thrill of wildlife encounters in Kenya and Tanzania, witness the great migration, and stay in luxury safari lodges.</p>
+                    <ul class="package-highlights">
+                        <li>Game drives included</li>
+                        <li>Luxury lodge stays</li>
+                        <li>Professional guides</li>
+                        <li>Wildlife photography tips</li>
+                    </ul>
+                    <div class="package-footer">
+                        <div>
+                            <span class="package-price-label">Starting from</span>
+                            <span class="package-price">$1,599</span>
+                        </div>
+                        <a href="contact.php" class="book-btn">Book Now</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Package 5: Asian Wonders -->
+            <div class="package-card">
+                <div class="package-image">🏯</div>
+                <div class="package-content">
+                    <div class="rating">★★★★☆ (4.6/5)</div>
+                    <h3 class="package-title">Asian Wonders</h3>
+                    <p class="package-duration">10 Days / 9 Nights</p>
+                    <p class="package-description">Explore temples in Thailand, visit Angkor Wat, experience bustling markets, and taste authentic Southeast Asian cuisine.</p>
+                    <ul class="package-highlights">
+                        <li>Temple visits & tours</li>
+                        <li>Local market tours</li>
+                        <li>Cooking classes</li>
+                        <li>Accommodation & meals</li>
+                    </ul>
+                    <div class="package-footer">
+                        <div>
+                            <span class="package-price-label">Starting from</span>
+                            <span class="package-price">$1,299</span>
+                        </div>
+                        <a href="contact.php" class="book-btn">Book Now</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Package 6: Northern Lights -->
+            <div class="package-card">
+                <div class="package-image">🌌</div>
+                <div class="package-content">
+                    <div class="rating">★★★★★ (5/5)</div>
+                    <h3 class="package-title">Northern Lights</h3>
+                    <p class="package-duration">5 Days / 4 Nights</p>
+                    <p class="package-description">Chase the Aurora Borealis in Iceland, enjoy ice hotel stays, visit waterfalls, and experience the magic of the Arctic.</p>
+                    <ul class="package-highlights">
+                        <li>Aurora viewing tours</li>
+                        <li>Ice hotel experience</li>
+                        <li>Waterfall visits</li>
+                        <li>Hot spring baths</li>
+                    </ul>
+                    <div class="package-footer">
+                        <div>
+                            <span class="package-price-label">Starting from</span>
+                            <span class="package-price">$1,399</span>
+                        </div>
+                        <a href="contact.php" class="book-btn">Book Now</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Package 7: Family Fun -->
+            <div class="package-card">
+                <div class="package-image">👨‍👩‍👧‍👦</div>
+                <div class="package-content">
+                    <div class="rating">★★★★☆ (4.7/5)</div>
+                    <h3 class="package-title">Family Fun</h3>
+                    <p class="package-duration">7 Days / 6 Nights</p>
+                    <p class="package-description">Perfect family vacation in Florida with theme parks, beaches, wildlife encounters, and entertainment for all ages.</p>
+                    <ul class="package-highlights">
+                        <li>Theme park tickets</li>
+                        <li>Beach activities</li>
+                        <li>Family-friendly tours</li>
+                        <li>Meals & lodging</li>
+                    </ul>
+                    <div class="package-footer">
+                        <div>
+                            <span class="package-price-label">Starting from</span>
+                            <span class="package-price">$1,199</span>
+                        </div>
+                        <a href="contact.php" class="book-btn">Book Now</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Package 8: Cruise Vacation -->
+            <div class="package-card">
+                <div class="package-image">⛴️</div>
+                <div class="package-content">
+                    <div class="rating">★★★★☆ (4.5/5)</div>
+                    <h3 class="package-title">Cruise Vacation</h3>
+                    <p class="package-duration">7 Days / 6 Nights</p>
+                    <p class="package-description">Luxurious Caribbean cruise with stops at tropical islands, onboard entertainment, fine dining, and world-class amenities.</p>
+                    <ul class="package-highlights">
+                        <li>Luxury cruise ship</li>
+                        <li>Multiple island stops</li>
+                        <li>All meals included</li>
+                        <li>Entertainment shows</li>
+                    </ul>
+                    <div class="package-footer">
+                        <div>
+                            <span class="package-price-label">Starting from</span>
+                            <span class="package-price">$999</span>
+                        </div>
+                        <a href="contact.php" class="book-btn">Book Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 TravelGo. All rights reserved. | Email: info@travelgo.com | Phone: 1-800-TRAVEL</p>
+    </footer>
+</body>
+</html>
